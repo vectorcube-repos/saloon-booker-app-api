@@ -11,9 +11,9 @@ class ServiceInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('ownerSalon.name')
+                TextEntry::make('ownerSalon')
                     ->label('Type')
-                    ->formatStateUsing(fn ($state) => $state ? "Private ({$state})" : 'Global')
+                    ->formatStateUsing(fn ($state) => $state ? "Private ({$state->name})" : 'Global')
                     ->placeholder('Global'),
                 TextEntry::make('name'),
                 TextEntry::make('salons_count')

@@ -11,8 +11,9 @@ class SalonInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('owner.id')
-                    ->label('Owner'),
+                TextEntry::make('owner')
+                    ->label('Owner')
+                    ->formatStateUsing(fn ($state) => $state ? $state->getFilamentName() . ' (' . $state->phone . ')' : '-'),
                 TextEntry::make('name'),
                 TextEntry::make('description')
                     ->placeholder('-')
@@ -34,6 +35,9 @@ class SalonInfolist
                 TextEntry::make('longitude')
                     ->numeric()
                     ->placeholder('-'),
+                TextEntry::make('services_count')
+                    ->label('Services')
+                    ->state(fn ($record) => $record ? $record->services()->count() : 0),
                 TextEntry::make('status')
                     ->badge(),
                 TextEntry::make('created_at')

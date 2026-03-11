@@ -20,7 +20,11 @@ class SalonResource extends Resource
 {
     protected static ?string $model = Salon::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\UnitEnum|null $navigationGroup = 'Salons';
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
 
     public static function form(Schema $schema): Schema
     {
@@ -37,10 +41,16 @@ class SalonResource extends Resource
         return SalonsTable::configure($table);
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['owner']);
+    }
+
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\SalonHoursRelationManager::class,
+            RelationManagers\ServicesRelationManager::class,
         ];
     }
 

@@ -41,6 +41,11 @@ class ServiceResource extends Resource
         return ServicesTable::configure($table);
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['ownerSalon']);
+    }
+
     public static function getRelations(): array
     {
         return [

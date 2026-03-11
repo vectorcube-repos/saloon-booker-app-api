@@ -1,34 +1,40 @@
 <?php
 
-namespace App\Filament\Resources\Services\Tables;
+namespace App\Filament\Resources\ServiceProviders\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class ServicesTable
+class ServiceProvidersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('ownerSalon')
-                    ->label('Type')
-                    ->formatStateUsing(fn ($state) => $state ? "Private ({$state->name})" : 'Global')
-                    ->placeholder('Global')
-                    ->sortable(),
-                TextColumn::make('name')
+                TextColumn::make('salon.name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('description')
-                    ->limit(40)
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('salons_count')
-                    ->label('Salons')
-                    ->counts('salons')
+                TextColumn::make('display_name')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('user')
+                    ->label('Linked user')
+                    ->formatStateUsing(fn ($state) => $state ? $state->getFilamentName() . ' (' . $state->phone . ')' : '–')
+                    ->placeholder('–'),
+                TextColumn::make('skill_tags')
+                    ->badge()
+                    ->separator(','),
+                TextColumn::make('services_count')
+                    ->label('Services')
+                    ->counts('services')
+                    ->sortable(),
+                IconColumn::make('active')
+                    ->boolean()
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -40,21 +46,15 @@ class ServicesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('offered_by_salon')
-                    ->label('Offered by salon')
-                    ->relationship('salons', 'name')
+                \Filament\Tables\Filters\SelectFilter::make('salon_id')
+                    ->relationship('salon', 'name')
+                    ->label('Salon')
                     ->searchable()
                     ->preload(),
-                \Filament\Tables\Filters\TernaryFilter::make('salon_id')
-                    ->label('Type')
+                \Filament\Tables\Filters\TernaryFilter::make('active')
                     ->placeholder('All')
-                    ->trueLabel('Private only')
-                    ->falseLabel('Global only')
-                    ->queries(
-                        true: fn ($query) => $query->whereNotNull('salon_id'),
-                        false: fn ($query) => $query->whereNull('salon_id'),
-                        blank: fn ($query) => $query,
-                    ),
+                    ->trueLabel('Active only')
+                    ->falseLabel('Inactive only'),
             ])
             ->recordActions([
                 ViewAction::make(),

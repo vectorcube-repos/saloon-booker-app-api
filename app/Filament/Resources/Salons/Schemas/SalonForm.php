@@ -15,7 +15,10 @@ class SalonForm
         return $schema
             ->components([
                 Select::make('owner_id')
-                    ->relationship('owner', 'id')
+                    ->relationship('owner', 'phone', fn ($query) => $query->where('role', 'owner'))
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->getFilamentName() . ' (' . $record->phone . ')')
+                    ->searchable(['first_name', 'last_name', 'phone'])
+                    ->preload()
                     ->required(),
                 TextInput::make('name')
                     ->required(),

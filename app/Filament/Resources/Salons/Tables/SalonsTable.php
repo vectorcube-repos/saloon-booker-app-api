@@ -15,10 +15,17 @@ class SalonsTable
     {
         return $table
             ->columns([
-                TextColumn::make('owner.id')
-                    ->searchable(),
+                TextColumn::make('owner')
+                    ->label('Owner')
+                    ->formatStateUsing(fn ($state) => $state ? $state->getFilamentName() . ' (' . $state->phone . ')' : '-')
+                    ->searchable(query: function ($query, $search) {
+                        return $query->whereHas('owner', fn ($q) => $q->where('first_name', 'like', "%{$search}%")
+                            ->orWhere('last_name', 'like', "%{$search}%")
+                            ->orWhere('phone', 'like', "%{$search}%"));
+                    }),
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('phone')
                     ->searchable(),
                 TextColumn::make('city')
@@ -33,6 +40,10 @@ class SalonsTable
                 TextColumn::make('longitude')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('services_count')
+                    ->label('Services')
+                    ->counts('services')
+                    ->sortable(),
                 TextColumn::make('status')
                     ->badge(),
                 TextColumn::make('created_at')
@@ -45,7 +56,8 @@ class SalonsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                \Filament\Tables\Filters\SelectFilter::make('status')
+                    ->options(['active' => 'Active', 'closed' => 'Closed']),
             ])
             ->recordActions([
                 ViewAction::make(),
