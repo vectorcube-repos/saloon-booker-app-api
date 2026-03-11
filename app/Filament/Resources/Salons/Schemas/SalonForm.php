@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Salons\Schemas;
 
+use App\Filament\Helpers\FilamentRoleHelper;
 use Fahiem\FilamentPinpoint\Pinpoint;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -15,7 +17,16 @@ class SalonForm
         return $schema
             ->components([
                 Select::make('owner_id')
-                    ->relationship('owner', 'phone', fn ($query) => $query->where('role', 'owner'))
+                    ->relationship('owner', 'phone', function ($query) {
+                        $query->where('role', 'owner');
+                        if (FilamentRoleHelper::isOwner()) {
+                            $userId = Auth::id();
+                            if ($userId !== null) {
+                                $query->where('id', $userId);
+                            }
+                        }
+                        return $query;
+                    })
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->getFilamentName() . ' (' . $record->phone . ')')
                     ->searchable(['first_name', 'last_name', 'phone'])
                     ->preload()

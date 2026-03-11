@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Salons;
 
+use App\Filament\Helpers\FilamentRoleHelper;
 use App\Filament\Resources\Salons\Pages\CreateSalon;
 use App\Filament\Resources\Salons\Pages\EditSalon;
 use App\Filament\Resources\Salons\Pages\ListSalons;
@@ -26,6 +27,32 @@ class SalonResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
 
+    public static function canViewAny(): bool
+    {
+        return FilamentRoleHelper::isAdmin() || FilamentRoleHelper::isOwner();
+    }
+
+    public static function canEdit($record): bool
+    {
+        if (FilamentRoleHelper::isAdmin()) {
+            return true;
+        }
+        if (FilamentRoleHelper::isOwner()) {
+            return in_array($record->id, FilamentRoleHelper::ownerSalonIds());
+        }
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return static::canEdit($record);
+    }
+
+    public static function canView($record): bool
+    {
+        return static::canEdit($record);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return SalonForm::configure($schema);
@@ -43,7 +70,14 @@ class SalonResource extends Resource
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()->with(['owner']);
+        $query = parent::getEloquentQuery()->with(['owner']);
+
+        if (FilamentRoleHelper::isOwner()) {
+            $salonIds = FilamentRoleHelper::ownerSalonIds();
+            $query->whereIn('id', $salonIds ?: [0]);
+        }
+
+        return $query;
     }
 
     public static function getRelations(): array
@@ -51,6 +85,8 @@ class SalonResource extends Resource
         return [
             RelationManagers\SalonHoursRelationManager::class,
             RelationManagers\ServicesRelationManager::class,
+            RelationManagers\AppointmentsRelationManager::class,
+            RelationManagers\ReviewsRelationManager::class,
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Appointments\Schemas;
 
+use App\Filament\Helpers\FilamentRoleHelper;
 use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -23,7 +24,18 @@ class AppointmentForm
             ->components([
                 Select::make('salon_id')
                     ->label('Salon')
-                    ->relationship('salon', 'name')
+                    ->relationship('salon', 'name', function ($query) {
+                        if (FilamentRoleHelper::isOwner()) {
+                            $query->whereIn('id', FilamentRoleHelper::ownerSalonIds() ?: [0]);
+                        }
+                        if (FilamentRoleHelper::isStaff()) {
+                            $provider = auth()->user()?->serviceProvider;
+                            if ($provider) {
+                                $query->where('id', $provider->salon_id);
+                            }
+                        }
+                        return $query;
+                    })
                     ->searchable()
                     ->preload()
                     ->required(),
@@ -36,7 +48,19 @@ class AppointmentForm
                     ->required(),
                 Select::make('provider_id')
                     ->label('Service provider')
-                    ->relationship('serviceProvider', 'display_name')
+                    ->relationship('serviceProvider', 'display_name', function ($query) {
+                        if (FilamentRoleHelper::isOwner()) {
+                            $salonIds = FilamentRoleHelper::ownerSalonIds();
+                            $query->whereIn('salon_id', $salonIds ?: [0]);
+                        }
+                        if (FilamentRoleHelper::isStaff()) {
+                            $provider = auth()->user()?->serviceProvider;
+                            if ($provider) {
+                                $query->where('id', $provider->id);
+                            }
+                        }
+                        return $query;
+                    })
                     ->searchable()
                     ->preload()
                     ->placeholder('Unassigned')

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ServiceProviders;
 
+use App\Filament\Helpers\FilamentRoleHelper;
 use App\Filament\Resources\ServiceProviders\Pages\CreateServiceProvider;
 use App\Filament\Resources\ServiceProviders\Pages\EditServiceProvider;
 use App\Filament\Resources\ServiceProviders\Pages\ListServiceProviders;
@@ -26,6 +27,32 @@ class ServiceProviderResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
 
+    public static function canViewAny(): bool
+    {
+        return FilamentRoleHelper::isAdmin() || FilamentRoleHelper::isOwner();
+    }
+
+    public static function canEdit($record): bool
+    {
+        if (FilamentRoleHelper::isAdmin()) {
+            return true;
+        }
+        if (FilamentRoleHelper::isOwner()) {
+            return in_array($record->salon_id, FilamentRoleHelper::ownerSalonIds());
+        }
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return static::canEdit($record);
+    }
+
+    public static function canView($record): bool
+    {
+        return static::canEdit($record);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return ServiceProviderForm::configure($schema);
@@ -41,10 +68,23 @@ class ServiceProviderResource extends Resource
         return ServiceProvidersTable::configure($table);
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (FilamentRoleHelper::isOwner()) {
+            $salonIds = FilamentRoleHelper::ownerSalonIds();
+            $query->whereIn('salon_id', $salonIds ?: [0]);
+        }
+
+        return $query;
+    }
+
     public static function getRelations(): array
     {
         return [
             RelationManagers\ServicesRelationManager::class,
+            RelationManagers\AppointmentsRelationManager::class,
         ];
     }
 

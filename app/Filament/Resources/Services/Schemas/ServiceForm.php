@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Services\Schemas;
 
+use App\Filament\Helpers\FilamentRoleHelper;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -16,7 +17,12 @@ class ServiceForm
                 Select::make('salon_id')
                     ->label('Type')
                     ->helperText('Leave empty for global catalog. Select a salon for a private (salon-only) service.')
-                    ->relationship('ownerSalon', 'name')
+                    ->relationship('ownerSalon', 'name', function ($query) {
+                        if (FilamentRoleHelper::isOwner()) {
+                            $query->whereIn('id', FilamentRoleHelper::ownerSalonIds() ?: [0]);
+                        }
+                        return $query;
+                    })
                     ->searchable()
                     ->preload()
                     ->placeholder('Global (catalog)'),

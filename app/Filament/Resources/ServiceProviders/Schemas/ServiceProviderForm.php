@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ServiceProviders\Schemas;
 
+use App\Filament\Helpers\FilamentRoleHelper;
 use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
@@ -17,7 +18,12 @@ class ServiceProviderForm
         return $schema
             ->components([
                 Select::make('salon_id')
-                    ->relationship('salon', 'name')
+                    ->relationship('salon', 'name', function ($query) {
+                        if (FilamentRoleHelper::isOwner()) {
+                            $query->whereIn('id', FilamentRoleHelper::ownerSalonIds() ?: [0]);
+                        }
+                        return $query;
+                    })
                     ->searchable()
                     ->preload()
                     ->required(),

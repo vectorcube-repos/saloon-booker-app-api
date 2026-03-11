@@ -65,7 +65,7 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return $this->role !== 'customer';
     }
 
     public function ownedSalons(): \Illuminate\Database\Eloquent\Relations\HasMany
