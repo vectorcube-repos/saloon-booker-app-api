@@ -4,7 +4,9 @@ namespace App\Filament\Resources\Appointments\Schemas;
 
 use App\Filament\Helpers\FilamentRoleHelper;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
@@ -29,7 +31,7 @@ class AppointmentForm
                             $query->whereIn('id', FilamentRoleHelper::ownerSalonIds() ?: [0]);
                         }
                         if (FilamentRoleHelper::isStaff()) {
-                            $provider = auth()->user()?->serviceProvider;
+                            $provider = Auth::user()?->serviceProvider;
                             if ($provider) {
                                 $query->where('id', $provider->salon_id);
                             }
@@ -54,7 +56,7 @@ class AppointmentForm
                             $query->whereIn('salon_id', $salonIds ?: [0]);
                         }
                         if (FilamentRoleHelper::isStaff()) {
-                            $provider = auth()->user()?->serviceProvider;
+                            $provider = Auth::user()?->serviceProvider;
                             if ($provider) {
                                 $query->where('id', $provider->id);
                             }
@@ -68,12 +70,35 @@ class AppointmentForm
                     ->nullable(),
                 Select::make('user_id')
                     ->label('Customer')
-                    ->relationship('user', 'first_name')
+                    ->relationship('user', 'first_name', fn ($query) => $query->where('role', 'customer'))
                     ->searchable()
                     ->preload()
-                    ->helperText('Customers are imported from the user catalog.')
+                    ->helperText('Select a customer or create a new one.')
                     ->required()
-                    ->getOptionLabelFromRecordUsing(fn (User $record): string => $record->getFilamentName() ?? $record->phone ?? "Customer #{$record->id}"),
+                    ->getOptionLabelFromRecordUsing(fn (User $record): string => $record->getFilamentName() ?? $record->phone ?? "Customer #{$record->id}")
+                    ->createOptionModalHeading('Create new customer')
+                    ->createOptionForm([
+                        TextInput::make('phone')
+                            ->tel()
+                            ->required()
+                            ->label('Phone'),
+                        TextInput::make('email')
+                            ->label('Email address')
+                            ->email(),
+                        TextInput::make('first_name')
+                            ->label('First name'),
+                        TextInput::make('last_name')
+                            ->label('Last name'),
+                        TextInput::make('password_hash')
+                            ->label('Password')
+                            ->password()
+                            ->required(),
+                    ])
+                    ->createOptionUsing(function (array $data): int {
+                        $data['role'] = 'customer';
+                        $user = User::create($data);
+                        return $user->getKey();
+                    }),
                 DateTimePicker::make('slot_start')
                     ->label('Start')
                     ->required()

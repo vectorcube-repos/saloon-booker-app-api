@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Reviews\Tables;
 
+use App\Filament\Helpers\FilamentRoleHelper;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -45,7 +46,9 @@ class ReviewsTable
             ])
             ->filters([
                 SelectFilter::make('salon_id')
-                    ->relationship('salon', 'name')
+                    ->relationship('salon', 'name', fn ($query) => FilamentRoleHelper::isOwner()
+                        ? $query->whereIn('id', FilamentRoleHelper::ownerSalonIds() ?: [0])
+                        : $query)
                     ->label('Salon')
                     ->searchable()
                     ->preload(),

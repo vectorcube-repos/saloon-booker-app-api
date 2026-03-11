@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Appointments\Tables;
 
+use App\Filament\Helpers\FilamentRoleHelper;
 use App\Filament\Resources\Appointments\Schemas\AppointmentForm;
+use Illuminate\Support\Facades\Auth;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -74,17 +76,50 @@ class AppointmentsTable
                 SelectFilter::make('status')
                     ->options(AppointmentForm::STATUS_OPTIONS),
                 SelectFilter::make('salon_id')
-                    ->relationship('salon', 'name')
+                    ->relationship('salon', 'name', function ($query) {
+                        if (FilamentRoleHelper::isOwner()) {
+                            $query->whereIn('id', FilamentRoleHelper::ownerSalonIds() ?: [0]);
+                        }
+                        if (FilamentRoleHelper::isStaff()) {
+                            $provider = Auth::user()?->serviceProvider;
+                            if ($provider) {
+                                $query->where('id', $provider->salon_id);
+                            }
+                        }
+                        return $query;
+                    })
                     ->label('Salon')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('service_id')
-                    ->relationship('service', 'name')
+                    ->relationship('service', 'name', function ($query) {
+                        if (FilamentRoleHelper::isOwner()) {
+                            $query->where(fn ($q) => $q->whereNull('salon_id')->orWhereIn('salon_id', FilamentRoleHelper::ownerSalonIds() ?: [0]));
+                        }
+                        if (FilamentRoleHelper::isStaff()) {
+                            $provider = Auth::user()?->serviceProvider;
+                            if ($provider) {
+                                $query->where(fn ($q) => $q->whereNull('salon_id')->orWhere('salon_id', $provider->salon_id));
+                            }
+                        }
+                        return $query;
+                    })
                     ->label('Service')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('provider_id')
-                    ->relationship('serviceProvider', 'display_name')
+                    ->relationship('serviceProvider', 'display_name', function ($query) {
+                        if (FilamentRoleHelper::isOwner()) {
+                            $query->whereIn('salon_id', FilamentRoleHelper::ownerSalonIds() ?: [0]);
+                        }
+                        if (FilamentRoleHelper::isStaff()) {
+                            $provider = Auth::user()?->serviceProvider;
+                            if ($provider) {
+                                $query->where('id', $provider->id);
+                            }
+                        }
+                        return $query;
+                    })
                     ->label('Provider')
                     ->searchable()
                     ->preload(),

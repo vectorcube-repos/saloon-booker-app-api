@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Services\Tables;
 
+use App\Filament\Helpers\FilamentRoleHelper;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -42,7 +43,9 @@ class ServicesTable
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('offered_by_salon')
                     ->label('Offered by salon')
-                    ->relationship('salons', 'name')
+                    ->relationship('salons', 'name', fn ($query) => FilamentRoleHelper::isOwner()
+                        ? $query->whereIn('salons.id', FilamentRoleHelper::ownerSalonIds() ?: [0])
+                        : $query)
                     ->searchable()
                     ->preload(),
                 \Filament\Tables\Filters\TernaryFilter::make('salon_id')
