@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Salon;
-use App\Models\Service;
 use App\Models\ServiceProvider;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -15,8 +14,8 @@ class ServiceProviderSeeder extends Seeder
         $salons = Salon::with('services')->get();
         $staffUsers = User::where('role', 'staff')->get();
 
-        foreach ($salons as $index => $salon) {
-            $count = rand(2, 5);
+        foreach ($salons as $salon) {
+            $count = rand(4, 8);
             $services = $salon->services;
 
             for ($i = 0; $i < $count; $i++) {
@@ -27,12 +26,12 @@ class ServiceProviderSeeder extends Seeder
                     'display_name' => fake()->firstName() . ' ' . fake()->lastName(),
                     'bio' => fake()->optional(0.7)->paragraph(),
                     'skill_tags' => fake()->randomElements(['hair', 'nails', 'skincare', 'massage', 'color', 'styling', 'mens', 'bridal'], rand(2, 5)),
-                    'active' => true,
+                    'active' => fake()->boolean(95),
                 ]);
 
                 if ($services->isNotEmpty()) {
                     $provider->services()->attach(
-                        $services->random(rand(1, min(4, $services->count())))->pluck('id')
+                        $services->random(rand(2, min(6, $services->count())))->pluck('id')
                     );
                 }
             }

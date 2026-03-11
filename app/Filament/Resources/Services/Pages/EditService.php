@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\ServiceTemplates\Pages;
+namespace App\Filament\Resources\Services\Pages;
 
-use App\Filament\Resources\ServiceTemplates\ServiceTemplateResource;
+use App\Filament\Resources\Services\ServiceResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditServiceTemplate extends EditRecord
+class EditService extends EditRecord
 {
-    protected static string $resource = ServiceTemplateResource::class;
+    protected static string $resource = ServiceResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -46,11 +46,6 @@ class ServiceProvider extends Model
         return $this->belongsToMany(Service::class, 'provider_services', 'provider_id', 'service_id');
     }
 
-    public function availabilityBlocks(): HasMany
-    {
-        return $this->hasMany(AvailabilityBlock::class, 'provider_id');
-    }
-
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class, 'provider_id');

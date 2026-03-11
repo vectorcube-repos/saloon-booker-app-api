@@ -9,17 +9,46 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory()->admin()->create([
+        User::create([
             'phone' => '+15551234567',
             'email' => 'admin@example.com',
             'first_name' => 'Admin',
             'last_name' => 'User',
+            'role' => 'admin',
+            'password_hash' => 'password',
         ]);
 
-        User::factory()->owner()->count(3)->create();
+        foreach (range(1, 20) as $i) {
+            User::create([
+                'phone' => '+1555' . str_pad((string) (1000000 + $i), 7, '0'),
+                'email' => "owner{$i}@example.com",
+                'first_name' => fake()->firstName(),
+                'last_name' => fake()->lastName(),
+                'role' => 'owner',
+                'password_hash' => 'password',
+            ]);
+        }
 
-        User::factory()->staff()->count(5)->create();
+        foreach (range(1, 40) as $i) {
+            User::create([
+                'phone' => '+1555' . str_pad((string) (2000000 + $i), 7, '0'),
+                'email' => "staff{$i}@example.com",
+                'first_name' => fake()->firstName(),
+                'last_name' => fake()->lastName(),
+                'role' => 'staff',
+                'password_hash' => 'password',
+            ]);
+        }
 
-        User::factory()->customer()->count(20)->create();
+        foreach (range(1, 80) as $i) {
+            User::create([
+                'phone' => '+1555' . str_pad((string) (3000000 + $i), 7, '0'),
+                'email' => "customer{$i}@example.com",
+                'first_name' => fake()->firstName(),
+                'last_name' => fake()->lastName(),
+                'role' => 'customer',
+                'password_hash' => 'password',
+            ]);
+        }
     }
 }

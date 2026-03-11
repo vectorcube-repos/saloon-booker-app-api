@@ -12,35 +12,44 @@ class ReviewSeeder extends Seeder
 {
     public function run(): void
     {
-        $salons = Salon::all();
-        $customers = User::where('role', 'customer')->get();
-
-        if ($salons->isEmpty() || $customers->isEmpty()) {
-            return;
-        }
-
-        $completedAppointments = Appointment::where('status', 'completed')
-            ->with(['salon', 'user'])
+        $completedAppointments = Appointment::with('salon')
+            ->where('status', 'completed')
             ->get();
 
-        foreach ($completedAppointments->take(10) as $appointment) {
+        $customers = User::where('role', 'customer')->get();
+        $reviewed = [];
+
+        foreach ($completedAppointments->random(min(80, $completedAppointments->count())) as $appointment) {
+            $key = "{$appointment->id}";
+            if (isset($reviewed[$key])) {
+                continue;
+            }
+            $reviewed[$key] = true;
+
             Review::create([
                 'salon_id' => $appointment->salon_id,
-                'user_id' => $appointment->user_id,
+                'user_id' => $appointment->user_id ?? $customers->random()->id,
                 'appointment_id' => $appointment->id,
-                'rating' => fake()->numberBetween(1, 5),
-                'comment' => fake()->optional(0.8)->paragraph(),
+                'rating' => fake()->numberBetween(3, 5),
+                'comment' => fake()->optional(0.7)->paragraph(),
             ]);
         }
 
-        foreach (range(1, 10) as $i) {
-            Review::create([
-                'salon_id' => $salons->random()->id,
-                'user_id' => $customers->random()->id,
-                'appointment_id' => null,
-                'rating' => fake()->numberBetween(1, 5),
-                'comment' => fake()->optional(0.8)->paragraph(),
-            ]);
+        $salons = Salon::all();
+        foreach ($salons as $salon) {
+            $reviewsToAdd = rand(3, 8);
+            for ($i = 0; $i < $reviewsToAdd; $i++) {
+                $customer = $customers->random();
+                if (! Review::where('salon_id', $salon->id)->where('user_id', $customer->id)->exists()) {
+                    Review::create([
+                        'salon_id' => $salon->id,
+                        'user_id' => $customer->id,
+                        'appointment_id' => null,
+                        'rating' => fake()->numberBetween(1, 5),
+                        'comment' => fake()->optional(0.7)->paragraph(),
+                    ]);
+                }
+            }
         }
     }
 }

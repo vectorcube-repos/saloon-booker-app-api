@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Salon extends Model
@@ -43,9 +44,16 @@ class Salon extends Model
         return $this->hasMany(SalonHour::class);
     }
 
-    public function services(): HasMany
+    public function services(): BelongsToMany
     {
-        return $this->hasMany(Service::class);
+        return $this->belongsToMany(Service::class, 'salon_service')
+            ->withPivot(['duration_minutes', 'rate', 'is_active'])
+            ->withTimestamps();
+    }
+
+    public function privateServices(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Service::class, 'salon_id');
     }
 
     public function serviceProviders(): HasMany

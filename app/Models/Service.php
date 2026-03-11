@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,13 +16,38 @@ class Service extends Model
         'salon_id',
         'name',
         'description',
-        'duration_minutes',
-        'price_cents',
     ];
 
-    public function salon(): BelongsTo
+    public function ownerSalon(): BelongsTo
     {
-        return $this->belongsTo(Salon::class);
+        return $this->belongsTo(Salon::class, 'salon_id');
+    }
+
+    public function scopeGlobal(Builder $query): Builder
+    {
+        return $query->whereNull('salon_id');
+    }
+
+    public function scopePrivateTo(Builder $query, int $salonId): Builder
+    {
+        return $query->where('salon_id', $salonId);
+    }
+
+    public function isGlobal(): bool
+    {
+        return $this->salon_id === null;
+    }
+
+    public function isPrivate(): bool
+    {
+        return $this->salon_id !== null;
+    }
+
+    public function salons(): BelongsToMany
+    {
+        return $this->belongsToMany(Salon::class, 'salon_service')
+            ->withPivot(['duration_minutes', 'rate', 'is_active'])
+            ->withTimestamps();
     }
 
     public function serviceProviders(): BelongsToMany

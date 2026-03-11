@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
             SalonHourSeeder::class,
             ServiceSeeder::class,
             ServiceProviderSeeder::class,
-            AvailabilityBlockSeeder::class,
             AppointmentSeeder::class,
             ReviewSeeder::class,
         ]);

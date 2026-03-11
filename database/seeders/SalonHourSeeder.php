@@ -13,13 +13,14 @@ class SalonHourSeeder extends Seeder
         $salons = Salon::all();
 
         foreach ($salons as $salon) {
-            foreach (range(0, 6) as $dayOfWeek) {
+            foreach (range(0, 6) as $day) {
+                $isClosed = $day === 0; // Sunday closed
                 SalonHour::create([
                     'salon_id' => $salon->id,
-                    'day_of_week' => $dayOfWeek,
-                    'open_time' => $dayOfWeek === 0 ? '00:00:00' : '09:00:00',
-                    'close_time' => $dayOfWeek === 0 ? '00:00:00' : '18:00:00',
-                    'is_closed' => $dayOfWeek === 0,
+                    'day_of_week' => $day,
+                    'open_time' => $isClosed ? '09:00' : '09:00',
+                    'close_time' => $isClosed ? '17:00' : '18:00',
+                    'is_closed' => $isClosed,
                 ]);
             }
         }

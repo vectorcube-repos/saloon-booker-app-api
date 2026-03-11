@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Salons\Schemas;
 
+use Fahiem\FilamentPinpoint\Pinpoint;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -27,10 +28,26 @@ class SalonForm
                 TextInput::make('city'),
                 TextInput::make('state'),
                 TextInput::make('postal_code'),
+                Pinpoint::make('location')
+                    ->label('Choose location on map')
+                    ->latField('latitude')
+                    ->lngField('longitude')
+                    ->addressField('address')
+                    ->cityField('city')
+                    ->provinceField('state')
+                    ->postalCodeField('postal_code')
+                    ->defaultZoom(14)
+                    ->height(400)
+                    ->columnSpanFull()
+                    ->dehydrated(false),
                 TextInput::make('latitude')
-                    ->numeric(),
+                    ->numeric()
+                    ->readOnly()
+                    ->dehydrated(),
                 TextInput::make('longitude')
-                    ->numeric(),
+                    ->numeric()
+                    ->readOnly()
+                    ->dehydrated(),
                 Select::make('status')
                     ->options(['active' => 'Active', 'closed' => 'Closed'])
                     ->default('active')
