@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SalonResource;
 use App\Models\Salon;
 use Illuminate\Http\JsonResponse;
 
@@ -13,7 +14,7 @@ class SalonController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        $salon = Salon::find($id);
+        $salon = Salon::with('media')->find($id);
 
         if (! $salon) {
             return response()->json([
@@ -25,21 +26,7 @@ class SalonController extends Controller
         return response()->json([
             'message' => 'OK',
             'status' => 'success',
-            'data' => [
-                'product' => 12,
-                'id' => $salon->id,
-                'owner_id' => $salon->owner_id,
-                'name' => $salon->name,
-                'description' => $salon->description,
-                'phone' => $salon->phone,
-                'address' => $salon->address,
-                'city' => $salon->city,
-                'state' => $salon->state,
-                'postal_code' => $salon->postal_code,
-                'latitude' => $salon->latitude,
-                'longitude' => $salon->longitude,
-                'status' => $salon->status,
-            ],
+            'data' => SalonResource::make($salon)->resolve(),
         ]);
     }
 }

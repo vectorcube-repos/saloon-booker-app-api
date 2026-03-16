@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ServiceProviders\Schemas;
 use App\Filament\Helpers\FilamentRoleHelper;
 use App\Models\User;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -43,6 +44,13 @@ class ServiceProviderForm
                     ->suggestions(['hair', 'nails', 'skincare', 'massage', 'color', 'styling', 'mens', 'bridal']),
                 Toggle::make('active')
                     ->default(true),
+                SpatieMediaLibraryFileUpload::make('photo')
+                    ->collection('photo')
+                    ->conversion('thumb')
+                    ->image()
+                    ->maxSize(5120)
+                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
+                    ->imagePreviewHeight('200')
             ]);
     }
 }

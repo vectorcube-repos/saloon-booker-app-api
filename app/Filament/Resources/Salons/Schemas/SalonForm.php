@@ -4,11 +4,12 @@ namespace App\Filament\Resources\Salons\Schemas;
 
 use App\Filament\Helpers\FilamentRoleHelper;
 use Fahiem\FilamentPinpoint\Pinpoint;
-use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class SalonForm
 {
@@ -33,6 +34,17 @@ class SalonForm
                     ->required(),
                 TextInput::make('name')
                     ->required(),
+                SpatieMediaLibraryFileUpload::make('salon_image')
+                    ->label('Salon image')
+                    ->collection('salon_image')
+                    ->conversion('thumb')
+                    ->image()
+                    ->maxSize(5120)
+                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
+                    ->imagePreviewHeight('200')
+                    ->columnSpanFull()
+                    ->openable()
+                    ->helperText('Upload a photo for this salon. Recommended: square image, min 200×200px.'), 
                 Textarea::make('description')
                     ->columnSpanFull(),
                 TextInput::make('phone')

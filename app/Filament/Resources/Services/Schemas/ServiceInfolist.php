@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Services\Schemas;
 
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -11,6 +12,11 @@ class ServiceInfolist
     {
         return $schema
             ->components([
+                SpatieMediaLibraryImageEntry::make('service_image')
+                    ->label('Service image')
+                    ->collection('service_image')
+                    ->conversion('card')
+                    ->hidden(fn ($record) => $record && $record->getFirstMedia('service_image') === null),
                 TextEntry::make('ownerSalon')
                     ->label('Type')
                     ->formatStateUsing(fn ($state) => $state ? "Private ({$state->name})" : 'Global')

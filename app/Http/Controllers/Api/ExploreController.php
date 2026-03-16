@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SalonListResource;
+use App\Http\Resources\ServiceResource;
 use App\Models\Salon;
 use App\Models\Service;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class ExploreController extends Controller
 {
@@ -15,26 +17,34 @@ class ExploreController extends Controller
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $perPage = max(1, min(50, (int) $request->get('per_page', 15)));
 
-        $salons = Salon::where('status', 'active')
-            ->orderBy('name')
-            ->paginate($perPage, [
-                'id', 'name', 'description', 'phone', 'address',
-                'city', 'state', 'postal_code', 'latitude', 'longitude', 'status',
-            ]);
+        $salonsQuery = Salon::where('status', 'active')
+            ->with('media')
+            ->orderBy('name');
 
-        $categories = Service::whereNull('salon_id')
-            ->orderBy('name')
-            ->get(['id', 'name']);
+        if ($request->filled('service_id')) {
+            $salonsQuery->whereHas('services', fn ($q) => $q->where('services.id', $request->service_id));
+        }
 
-        return response()->json([
-            'message' => 'OK',
-            'status' => 'success',
+        $salons = $salonsQuery->paginate(6);
+
+        $data = [
+            'status' => true,
+            'message' => 'Explore screen data fetched successfully',
             'data' => [
-                'salons' => $salons,
-                'categories' => $categories,
+                'salons' => new SalonListResource($salons),
             ],
-        ]);
+        ];
+
+        if ($request->has('initial') && $request->initial == '1') {
+            $categories = Service::whereNull('salon_id')
+                ->with('media')
+                ->orderBy('name')
+                ->get();
+
+            $data['data']['services'] = ServiceResource::collection($categories);
+        }
+
+        return response()->json($data, 200);
     }
 }

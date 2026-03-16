@@ -7,6 +7,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -16,6 +17,11 @@ class ServicesTable
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('service_image')
+                    ->label('Image')
+                    ->collection('service_image')
+                    ->conversion('thumb')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('ownerSalon')
                     ->label('Type')
                     ->formatStateUsing(fn ($state) => $state ? "Private ({$state->name})" : 'Global')

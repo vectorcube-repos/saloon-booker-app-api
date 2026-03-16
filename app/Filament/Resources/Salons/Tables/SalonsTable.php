@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -15,6 +16,11 @@ class SalonsTable
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('salon_image')
+                    ->label('Image')
+                    ->collection('salon_image')
+                    ->conversion('thumb')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('owner')
                     ->label('Owner')
                     ->formatStateUsing(fn ($state) => $state ? $state->getFilamentName() . ' (' . $state->phone . ')' : '-')

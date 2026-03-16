@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Salons\Schemas;
 
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -11,6 +12,11 @@ class SalonInfolist
     {
         return $schema
             ->components([
+                SpatieMediaLibraryImageEntry::make('salon_image')
+                    ->label('Salon image')
+                    ->collection('salon_image')
+                    ->conversion('card')
+                    ->hidden(fn ($record) => $record && $record->getFirstMedia('salon_image') === null),
                 TextEntry::make('owner')
                     ->label('Owner')
                     ->formatStateUsing(fn ($state) => $state ? $state->getFilamentName() . ' (' . $state->phone . ')' : '-'),

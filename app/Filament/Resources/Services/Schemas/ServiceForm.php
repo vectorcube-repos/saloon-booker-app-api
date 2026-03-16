@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Services\Schemas;
 
 use App\Filament\Helpers\FilamentRoleHelper;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
@@ -31,6 +32,16 @@ class ServiceForm
                     ->maxLength(120),
                 Textarea::make('description')
                     ->columnSpanFull(),
+                SpatieMediaLibraryFileUpload::make('service_image')
+                    ->collection('service_image')
+                    ->conversion('thumb')
+                    ->image()
+                    ->maxSize(5120)
+                    ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
+                    ->imagePreviewHeight('200')
+                    ->columnSpanFull()
+                    ->openable()
+                    ->helperText('Upload a photo for this doctor. Recommended: square image, min 200×200px.'),                    
             ]);
     }
 }

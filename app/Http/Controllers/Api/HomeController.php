@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SalonResource;
+use App\Http\Resources\ServiceResource;
 use App\Models\Salon;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
@@ -15,25 +17,27 @@ class HomeController extends Controller
     public function __invoke(): JsonResponse
     {
         $globalServices = Service::whereNull('salon_id')
-            ->get(['id', 'name', 'description']);
+            ->with('media')
+            ->get();
 
         $salons = Salon::where('status', 'active')
+            ->with('media')
             ->limit(10)
-            ->get(['id', 'name', 'description', 'phone', 'address', 'city', 'state', 'postal_code', 'latitude', 'longitude']);
+            ->get();
 
         $mostBookedServices = Service::withCount('appointments')
+            ->with('media')
             ->orderByDesc('appointments_count')
             ->limit(5)
-            ->get(['id', 'name', 'description', 'salon_id']);
+            ->get();
 
         return response()->json([
-            'message' => 'Welcome to the Saloon Booker App API!',
-            'version' => '1.0.0',
-            'status' => 'success',
+            'message' => 'Home screen data fetched successfully',
+            'status' => true,
             'data' => [
-                'global_services' => $globalServices,
-                'salons' => $salons,
-                'most_booked_services' => $mostBookedServices,
+                'services' => ServiceResource::collection($globalServices),
+                'salons' => SalonResource::collection($salons), 
+                'most_booked_services' => ServiceResource::collection($mostBookedServices)
             ],
         ]);
     }
