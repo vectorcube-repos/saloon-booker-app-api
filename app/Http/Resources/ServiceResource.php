@@ -19,6 +19,11 @@ class ServiceResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'description' => $this->description,
+            'duration_minutes' => isset($this->pivot) ? (int) $this->pivot->duration_minutes : null,
+            'rate' => isset($this->pivot) ? (int) $this->pivot->rate : null,
+            'formatted_rate' => isset($this->pivot) ? number_format($this->pivot->rate / 100, 2) : null,
+            'is_active' => isset($this->pivot) ? (bool) $this->pivot->is_active : null,
             'image' => $thumbUrl ? url($thumbUrl) : null,
         ];
     }

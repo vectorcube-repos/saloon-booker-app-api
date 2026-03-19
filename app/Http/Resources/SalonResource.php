@@ -15,6 +15,7 @@ class SalonResource extends JsonResource
     public function toArray(Request $request): array
     {
         $thumbUrl = $this->getFirstMediaUrl('salon_image', 'thumb');
+
         return [
             'id' => $this->id,
             'owner_id' => $this->owner_id,
@@ -28,7 +29,9 @@ class SalonResource extends JsonResource
             'latitude' => $this->latitude !== null ? (float) $this->latitude : null,
             'longitude' => $this->longitude !== null ? (float) $this->longitude : null,
             'status' => $this->status,
-            'image' => $thumbUrl ? url($thumbUrl) : null,            
+            'image' => $thumbUrl ? url($thumbUrl) : null,
+            'rating' => $this->reviews_avg_rating !== null ? round((float) $this->reviews_avg_rating, 1) : null,
+            'reviews_count' => (int) ($this->reviews_count ?? 0),
         ];
     }
 }

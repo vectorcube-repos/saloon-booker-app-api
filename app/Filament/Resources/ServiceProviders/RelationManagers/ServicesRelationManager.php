@@ -28,10 +28,16 @@ class ServicesRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make()
+                    ->recordSelectSearchColumns(['name'])
                     ->recordSelectOptionsQuery(function ($query) {
                         $provider = $this->getOwnerRecord();
-                        $serviceIds = $provider->salon?->services()->pluck('id') ?? collect();
-                        return $query->whereIn('id', $serviceIds);
+                        $salonId = $provider->salon_id;
+
+                        if (! $salonId) {
+                            return $query->whereRaw('0 = 1');
+                        }
+
+                        return $query->whereHas('salons', fn ($q) => $q->where('salons.id', $salonId));
                     }),
             ])
             ->recordActions([

@@ -69,8 +69,8 @@ class ServicesRelationManager extends RelationManager
                 AttachAction::make()
                     ->recordSelectOptionsQuery(fn ($query) => $query->where(function ($q) {
                         $salonId = $this->getOwnerRecord()->id;
-                        $q->whereNull('salon_id')
-                            ->orWhere('salon_id', $salonId);
+                        $q->whereNull('services.salon_id')
+                            ->orWhere('services.salon_id', $salonId);
                     }))
                     ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect(),
