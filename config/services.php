@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'google_maps' => [
+        'key' => env('GOOGLE_MAPS_API_KEY'),
+        'geocoding_url' => env('GOOGLE_MAPS_GEOCODING_URL', 'https://maps.googleapis.com/maps/api/geocode/json'),
+        'autocomplete_url' => env('GOOGLE_MAPS_AUTOCOMPLETE_URL', 'https://places.googleapis.com/v1/places:autocomplete'),
+        'place_details_url' => env('GOOGLE_MAPS_PLACE_DETAILS_URL', 'https://places.googleapis.com/v1/places'),
+    ],
+
 ];
