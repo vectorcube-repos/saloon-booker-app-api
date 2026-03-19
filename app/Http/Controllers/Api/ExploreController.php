@@ -17,9 +17,13 @@ class ExploreController extends Controller
      */
     public function __invoke(Request $request): JsonResponse
     {
+        $user = $request->user();
 
         $salonsQuery = Salon::where('status', 'active')
             ->with('media')
+            ->withExists([
+                'favoritedByUsers as is_favorite' => fn ($query) => $query->where('users.id', $user->id),
+            ])
             ->orderBy('name');
 
         if ($request->filled('service_id')) {

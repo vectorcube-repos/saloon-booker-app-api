@@ -25,6 +25,9 @@ class HomeController extends Controller
 
         $salons = Salon::where('status', 'active')
             ->with('media')
+            ->withExists([
+                'favoritedByUsers as is_favorite' => fn ($query) => $query->where('users.id', $request->user()->id),
+            ])
             ->limit(10)
             ->get();
 

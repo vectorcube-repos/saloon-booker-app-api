@@ -87,4 +87,10 @@ class User extends Authenticatable implements FilamentUser, HasName
     {
         return $this->hasOne(ServiceProvider::class);
     }
+
+    public function favoriteSalons(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Salon::class, 'favorite_salons')
+            ->withTimestamps();
+    }
 }

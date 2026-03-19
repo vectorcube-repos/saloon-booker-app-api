@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ExploreController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\SalonController;
 
@@ -22,7 +23,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/salons/{id}', [SalonController::class, 'show']);
     Route::post('/appointments', [AppointmentController::class, 'store']);
     Route::get('/bookings', [BookingController::class, 'index']);
+    Route::get('/favorites', [FavoriteController::class, 'index']);
+    Route::post('/favorites', [FavoriteController::class, 'store']);
+    Route::delete('/favorites/{salon}', [FavoriteController::class, 'destroy']);
 });
-
 
 

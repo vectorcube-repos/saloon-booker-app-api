@@ -18,6 +18,8 @@ class SalonController extends Controller
      */
     public function show(Request $request, string $id): JsonResponse
     {
+        $user = $request->user();
+
         $salon = Salon::with([
             'media',
             'salonHours',
@@ -32,6 +34,9 @@ class SalonController extends Controller
         ])
             ->withCount('reviews')
             ->withAvg('reviews', 'rating')
+            ->withExists([
+                'favoritedByUsers as is_favorite' => fn ($query) => $query->where('users.id', $user->id),
+            ])
             ->find($id);
 
         if (! $salon) {

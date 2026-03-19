@@ -89,4 +89,10 @@ class Salon extends Model implements HasMedia
     {
         return $this->hasMany(Review::class);
     }
+
+    public function favoritedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'favorite_salons')
+            ->withTimestamps();
+    }
 }

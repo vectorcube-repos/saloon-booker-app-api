@@ -32,6 +32,7 @@ class SalonResource extends JsonResource
             'image' => $thumbUrl ? url($thumbUrl) : null,
             'rating' => $this->reviews_avg_rating !== null ? round((float) $this->reviews_avg_rating, 1) : null,
             'reviews_count' => (int) ($this->reviews_count ?? 0),
+            'is_favorite' => (bool) ($this->is_favorite ?? false),
         ];
     }
 }
