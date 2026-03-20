@@ -144,4 +144,66 @@ class LocationSearchService
             'types' => $response->json('types', []),
         ];
     }
+
+    public function reverseGeocode(float $latitude, float $longitude): array
+    {
+        $apiKey = config('services.google_maps.key');
+
+        if (! $apiKey) {
+            throw new RuntimeException('Google Maps API key is not configured.');
+        }
+
+        try {
+            $response = Http::timeout(10)
+                ->acceptJson()
+                ->get(config('services.google_maps.geocoding_url'), [
+                    'latlng' => $latitude . ',' . $longitude,
+                    'key' => $apiKey,
+                ])
+                ->throw();
+        } catch (RequestException $exception) {
+            $providerMessage = Arr::get($exception->response?->json(), 'error_message')
+                ?? Arr::get($exception->response?->json(), 'status')
+                ?? $exception->response?->body()
+                ?? 'Reverse geocoding provider request failed.';
+
+            throw new RuntimeException('Reverse geocoding provider request failed: ' . $providerMessage, previous: $exception);
+        }
+
+        $payload = $response->json();
+        $status = $payload['status'] ?? null;
+
+        if (! in_array($status, ['OK', 'ZERO_RESULTS'], true)) {
+            throw new RuntimeException('Reverse geocoding provider returned an error: ' . $status);
+        }
+
+        $result = collect($payload['results'] ?? [])->first();
+
+        if (! $result) {
+            return [
+                'place_id' => null,
+                'name' => null,
+                'address' => null,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'main_text' => null,
+                'secondary_text' => null,
+                'types' => [],
+            ];
+        }
+
+        $formattedAddress = $result['formatted_address'] ?? null;
+        $mainText = $formattedAddress ? trim((string) explode(',', $formattedAddress)[0]) : null;
+
+        return [
+            'place_id' => $result['place_id'] ?? null,
+            'name' => $mainText,
+            'address' => $formattedAddress,
+            'latitude' => data_get($result, 'geometry.location.lat', $latitude),
+            'longitude' => data_get($result, 'geometry.location.lng', $longitude),
+            'main_text' => $mainText,
+            'secondary_text' => $formattedAddress,
+            'types' => $result['types'] ?? [],
+        ];
+    }
 }

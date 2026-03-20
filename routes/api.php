@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SalonController;
+use App\Http\Controllers\Api\SearchController;
 
 // Auth: OTP flow. New users are created on first successful OTP verify (phone not in users table).
 Route::group(['prefix' => 'auth'], function () {
@@ -23,9 +24,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/home', HomeController::class);
     Route::get('/explore', ExploreController::class);
     Route::get('/locations/search', [LocationController::class, 'search']);
+    Route::get('/locations/reverse', [LocationController::class, 'reverse']);
     Route::get('/locations/{placeId}', [LocationController::class, 'show']);
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::patch('/profile', [ProfileController::class, 'update']);
+    Route::get('/search', SearchController::class);
     Route::get('/salons/{id}', [SalonController::class, 'show']);
     Route::post('/appointments', [AppointmentController::class, 'store']);
     Route::get('/bookings', [BookingController::class, 'index']);

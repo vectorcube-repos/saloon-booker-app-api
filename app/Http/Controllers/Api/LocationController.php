@@ -84,4 +84,31 @@ class LocationController extends Controller
             'data' => LocationDetailsResource::make($location)->resolve(),
         ]);
     }
+
+    public function reverse(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+        ]);
+
+        try {
+            $location = $this->locationSearchService->reverseGeocode(
+                latitude: (float) $validated['latitude'],
+                longitude: (float) $validated['longitude'],
+            );
+        } catch (RuntimeException $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+                'status' => 'error',
+                'data' => null,
+            ], 503);
+        }
+
+        return response()->json([
+            'message' => 'OK',
+            'status' => 'success',
+            'data' => LocationDetailsResource::make($location)->resolve(),
+        ]);
+    }
 }

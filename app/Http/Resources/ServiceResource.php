@@ -24,6 +24,7 @@ class ServiceResource extends JsonResource
             'rate' => isset($this->pivot) ? (int) $this->pivot->rate : null,
             'formatted_rate' => isset($this->pivot) ? number_format($this->pivot->rate / 100, 2) : null,
             'is_active' => isset($this->pivot) ? (bool) $this->pivot->is_active : null,
+            'active_salons_count' => $this->active_salons_count ?? null,
             'image' => $thumbUrl ? url($thumbUrl) : null,
         ];
     }
