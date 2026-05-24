@@ -2,6 +2,8 @@
 
 Backend API for the Saloon Booker mobile app demo. This project provides authentication, salon discovery, booking, favorites, and profile management endpoints used by the mobile client.
 
+<a href="https://www.youtube.com/watch?v=jz5L__6JGdI" target="_blank" rel="noopener noreferrer">Mobile App Demo (YouTube)</a>
+
 ## What Is Inside This Repo
 
 - Laravel 12 API backend with token-based auth (`Laravel Sanctum`)
@@ -49,55 +51,38 @@ All main app endpoints are defined in `routes/api.php`.
 1. Clone the repository.
 2. Install dependencies:
 
-   ```bash
-   composer install
-   ```
+    ```bash
+    composer install
+    ```
 
 3. Create environment file:
 
-   ```bash
-   cp .env.example .env
-   ```
+    ```bash
+    cp .env.example .env
+    ```
 
 4. Generate app key:
 
-   ```bash
-   php artisan key:generate
-   ```
+    ```bash
+    php artisan key:generate
+    ```
 
 5. Configure database in `.env`.
 6. Run migrations and seed demo data:
 
-   ```bash
-   php artisan migrate --seed
-   ```
+    ```bash
+    php artisan migrate --seed
+    ```
 
 7. Start the API server:
 
-   ```bash
-   php artisan serve
-   ```
+    ```bash
+    php artisan serve
+    ```
 
 The API will be available at `http://127.0.0.1:8000`.
-
-## Useful Commands
-
-```bash
-# Run tests
-php artisan test
-
-# Format code (Laravel Pint)
-./vendor/bin/pint
-
-# Run app + queue + logs + vite together (project script)
-composer run dev
-```
 
 ## Environment Notes
 
 - Set `GOOGLE_MAPS_API_KEY` in `.env` if location endpoints rely on Google Maps services.
 - Ensure Sanctum is configured correctly when testing from a mobile app or API client.
-
-## License
-
-This project uses the [MIT License](https://opensource.org/licenses/MIT).
