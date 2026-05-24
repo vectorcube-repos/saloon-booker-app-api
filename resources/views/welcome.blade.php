@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SalonBooker - Static Tailwind</title>
+    <title>SalonBooker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -32,11 +32,19 @@
         }
       }
     </script>
+    <style>
+      .mobile-app-screenshot {
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        filter: drop-shadow(0 18px 24px hsla(220, 25%, 12%, 0.16));
+      }
+    </style>
   </head>
   <body class="min-h-screen bg-[hsl(0_0%_99%)] text-[hsl(220_25%_12%)] [font-family:'DM_Sans',system-ui,sans-serif]">
     <nav class="fixed top-0 left-0 right-0 z-50 border-b border-[hsl(220_13%_90%)]/70 bg-white/80 backdrop-blur-xl">
       <div class="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <a href="#" class="flex items-center gap-1 text-xl font-bold">
+        <a href="#" class="flex items-center text-xl font-bold">
           <span>Salon</span><span class="text-brand-600">Booker</span>
         </a>
 
@@ -46,41 +54,54 @@
           <a href="#highlights" class="transition-colors hover:text-[hsl(220_25%_12%)]">Why SalonBooker</a>
         </div>
 
-        <a href="#" class="rounded-lg bg-gradient-to-r from-brand-500 to-brand-700 px-5 py-2 text-sm font-semibold text-white shadow-brand-sm transition-all duration-300 hover:shadow-brand-lg">
-          Get Started
+        <a href="https://github.com/vectorcube-repos/flutter-salon-booker-app" class="inline-flex items-center gap-2 rounded-md border border-[#1f2328] bg-[#24292f] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-[#32383f] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2" target="_blank" rel="noopener noreferrer">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.11.79-.25.79-.56v-2.17c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.04 0 0 .98-.31 3.18 1.18.92-.26 1.91-.38 2.89-.39.98.01 1.97.13 2.89.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.58.23 2.75.11 3.04.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
+          </svg>
+          Source Code
         </a>
       </div>
     </nav>
 
     <main>
-      <section class="relative flex min-h-screen items-center overflow-hidden bg-[hsl(0_0%_99%)] pt-16">
-        <div class="relative z-10 mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
-          <div class="grid items-center gap-12 lg:grid-cols-2">
-            <div>
-              <span class="mb-6 inline-flex items-center gap-2 rounded-full bg-[hsl(4_80%_95%)] px-4 py-1.5 text-sm font-medium text-[hsl(4_80%_38%)]">
-                Mobile App + Admin Panel
-              </span>
-
+      <section class="relative flex min-h-[calc(100vh-4rem)] items-start overflow-hidden bg-[hsl(0_0%_99%)] pt-16 lg:items-center">
+        <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-6 pt-10 sm:px-6 md:pb-8 md:pt-24 lg:px-8 lg:pb-12 lg:pt-16">
+          <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
+            <div class="text-center lg:pr-8 lg:text-left xl:pr-12">
               <h1 class="mb-6 text-4xl font-extrabold leading-tight text-[hsl(220_25%_12%)] sm:text-5xl md:text-6xl">
                 The Complete<br />
                 <span class="bg-gradient-to-r from-brand-500 to-brand-700 bg-clip-text text-transparent">Salon Booking</span><br />
                 Platform
               </h1>
 
-              <p class="mb-8 max-w-md text-lg leading-relaxed text-[hsl(220_10%_46%)]">
+              <p class="mx-auto mb-8 max-w-md text-lg leading-relaxed text-[hsl(220_10%_46%)] lg:mx-0">
                 A full-featured appointment booking app for salons with a beautiful mobile experience for customers and a powerful admin panel to manage everything.
               </p>
 
-              <div class="flex flex-col gap-4 sm:flex-row">
-                <a href="#" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-brand-500 to-brand-700 px-8 py-4 text-base font-semibold text-white shadow-brand-sm transition hover:shadow-brand-lg">
-                  View Mobile App
+              <div class="flex flex-col items-stretch gap-3 sm:items-center lg:items-start">
+                <a href="https://www.youtube.com/watch?v=jz5L__6JGdI" class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-[#b91c1c] bg-[#dc2626] px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-[#b91c1c] focus:outline-none focus:ring-2 focus:ring-[#dc2626] focus:ring-offset-2 sm:w-auto" target="_blank" rel="noopener noreferrer">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8ZM9.6 15.6V8.4L15.9 12l-6.3 3.6Z" />
+                  </svg>
+                  Watch App Demo
                 </a>
-                <a href="#" class="inline-flex items-center justify-center rounded-xl border border-brand-300 px-8 py-4 text-base font-semibold text-brand-700 transition hover:bg-brand-50">
-                  View Admin Panel
-                </a>
+                <div class="flex flex-col gap-3 sm:flex-row">
+                  <a href="https://github.com/vectorcube-repos/flutter-salon-booker-app" class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-[#1f2328] bg-[#24292f] px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-[#32383f] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2 sm:w-auto" target="_blank" rel="noopener noreferrer">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.11.79-.25.79-.56v-2.17c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.04 0 0 .98-.31 3.18 1.18.92-.26 1.91-.38 2.89-.39.98.01 1.97.13 2.89.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.58.23 2.75.11 3.04.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
+                    </svg>
+                    Flutter App
+                  </a>
+                  <a href="https://github.com/vectorcube-repos/saloon-booker-app-api" class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-[#1f2328] bg-[#24292f] px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors duration-200 hover:bg-[#32383f] focus:outline-none focus:ring-2 focus:ring-[#0969da] focus:ring-offset-2 sm:w-auto" target="_blank" rel="noopener noreferrer">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.11.79-.25.79-.56v-2.17c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.04 0 0 .98-.31 3.18 1.18.92-.26 1.91-.38 2.89-.39.98.01 1.97.13 2.89.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.58.23 2.75.11 3.04.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.18c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" />
+                    </svg>
+                    Laravel API
+                  </a>
+                </div>
               </div>
 
-              <div class="mt-12 flex items-center gap-8 text-[hsl(220_10%_46%)]">
+              <div class="mt-12 flex items-center justify-center gap-8 text-[hsl(220_10%_46%)] lg:justify-start">
                 <div class="text-center">
                   <p class="text-2xl font-bold text-[hsl(220_25%_12%)]">21+</p>
                   <p class="text-sm">Salons</p>
@@ -98,19 +119,19 @@
               </div>
             </div>
 
-            <div class="relative flex items-end justify-center gap-4">
-              <div class="pointer-events-none absolute -bottom-16 left-1/2 w-[140%] -translate-x-1/2">
-                <img src="/assets/screenshots/admin-dashboard.png" alt="SalonBooker Admin Dashboard" class="w-full rounded-xl opacity-40 shadow-xl" />
+            <div class="relative flex items-end justify-center gap-3 xl:gap-4">
+              <div class="pointer-events-none absolute -bottom-16 left-1/2 w-[150%] -translate-x-1/2 xl:w-[165%]">
+                <img src="/assets/screenshots/admin-dashboard.png" alt="SalonBooker Admin Dashboard" class="mobile-app-screenshot w-full opacity-40" />
               </div>
 
               <div class="relative z-10 hidden -mb-4 sm:block">
-                <img src="/assets/screenshots/login-screen.png" alt="SalonBooker Login Screen" class="w-48 rounded-3xl border border-[hsl(220_13%_90%)]/60 shadow-2xl" />
+                <img src="/assets/screenshots/login-screen.png" alt="SalonBooker Login Screen" class="mobile-app-screenshot w-44 lg:w-52 xl:w-56" />
               </div>
               <div class="relative z-20">
-                <img src="/assets/screenshots/home-screen.png" alt="SalonBooker Home Screen" class="w-64 rounded-3xl border border-[hsl(220_13%_90%)]/60 shadow-2xl" />
+                <img src="/assets/screenshots/home-screen.png" alt="SalonBooker Home Screen" class="mobile-app-screenshot w-64 lg:w-72 xl:w-80" />
               </div>
               <div class="relative z-10 hidden -mb-4 sm:block">
-                <img src="/assets/screenshots/booking-screen.png" alt="SalonBooker Booking Screen" class="w-48 rounded-3xl border border-[hsl(220_13%_90%)]/60 shadow-2xl" />
+                <img src="/assets/screenshots/booking-screen.png" alt="SalonBooker Booking Screen" class="mobile-app-screenshot w-44 lg:w-52 xl:w-56" />
               </div>
             </div>
           </div>
@@ -152,21 +173,33 @@
             </article>
           </div>
 
-          <div class="flex gap-6 overflow-x-auto pb-4">
-            <div class="flex shrink-0 flex-col items-center gap-3">
-              <img src="/assets/screenshots/salon-list-screen.png" alt="Explore Salons" class="w-44 rounded-2xl border border-[hsl(220_13%_90%)]/50 shadow-lg md:w-52" />
-              <span class="text-sm font-medium text-[hsl(220_10%_46%)]">Explore</span>
+          <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="flex flex-col items-center gap-3">
+              <img src="/assets/screenshots/login-screen.png" alt="Login Screen" class="mobile-app-screenshot w-full max-w-60" />
+              <span class="text-sm font-medium text-[hsl(220_10%_46%)]">Login</span>
             </div>
-            <div class="flex shrink-0 flex-col items-center gap-3">
-              <img src="/assets/screenshots/salon-screen.png" alt="Salon Details" class="w-44 rounded-2xl border border-[hsl(220_13%_90%)]/50 shadow-lg md:w-52" />
-              <span class="text-sm font-medium text-[hsl(220_10%_46%)]">Salon Details</span>
+            <div class="flex flex-col items-center gap-3">
+              <img src="/assets/screenshots/otp-screen.png" alt="OTP Verification Screen" class="mobile-app-screenshot w-full max-w-60" />
+              <span class="text-sm font-medium text-[hsl(220_10%_46%)]">OTP Verification</span>
             </div>
-            <div class="flex shrink-0 flex-col items-center gap-3">
-              <img src="/assets/screenshots/home-screen.png" alt="Home Screen" class="w-44 rounded-2xl border border-[hsl(220_13%_90%)]/50 shadow-lg md:w-52" />
+            <div class="flex flex-col items-center gap-3">
+              <img src="/assets/screenshots/home-screen.png" alt="Home Screen" class="mobile-app-screenshot w-full max-w-60" />
               <span class="text-sm font-medium text-[hsl(220_10%_46%)]">Home</span>
             </div>
-            <div class="flex shrink-0 flex-col items-center gap-3">
-              <img src="/assets/screenshots/bookings-screen.png" alt="Bookings" class="w-44 rounded-2xl border border-[hsl(220_13%_90%)]/50 shadow-lg md:w-52" />
+            <div class="flex flex-col items-center gap-3">
+              <img src="/assets/screenshots/salon-list-screen.png" alt="Explore Salons" class="mobile-app-screenshot w-full max-w-60" />
+              <span class="text-sm font-medium text-[hsl(220_10%_46%)]">Explore</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+              <img src="/assets/screenshots/salon-screen.png" alt="Salon Details" class="mobile-app-screenshot w-full max-w-60" />
+              <span class="text-sm font-medium text-[hsl(220_10%_46%)]">Salon Details</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+              <img src="/assets/screenshots/booking-screen.png" alt="Booking Screen" class="mobile-app-screenshot w-full max-w-60" />
+              <span class="text-sm font-medium text-[hsl(220_10%_46%)]">Booking</span>
+            </div>
+            <div class="flex flex-col items-center gap-3">
+              <img src="/assets/screenshots/bookings-screen.png" alt="Bookings" class="mobile-app-screenshot w-full max-w-60" />
               <span class="text-sm font-medium text-[hsl(220_10%_46%)]">My Bookings</span>
             </div>
           </div>
@@ -253,8 +286,8 @@
 
     <footer class="border-t border-[hsl(220_13%_90%)] bg-[hsl(0_0%_99%)] py-12">
       <div class="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-6 px-4 sm:px-6 md:flex-row lg:px-8">
-        <a href="#" class="flex items-center gap-1 text-lg font-bold">
-          <span>Salon</span><span class="text-brand-600">Booker</span>
+        <a href="#" class="flex items-center text-lg font-bold">
+          <span>Salon<span class="text-brand-600">Booker</span></span>
         </a>
         <p class="text-sm text-[hsl(220_10%_46%)]">© 2026 SalonBooker. A complete salon appointment booking platform.</p>
         <div class="flex gap-6 text-sm text-[hsl(220_10%_46%)]">

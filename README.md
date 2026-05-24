@@ -1,59 +1,103 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Saloon Booker App API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Backend API for the Saloon Booker mobile app demo. This project provides authentication, salon discovery, booking, favorites, and profile management endpoints used by the mobile client.
 
-## About Laravel
+## What Is Inside This Repo
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Laravel 12 API backend with token-based auth (`Laravel Sanctum`)
+- OTP login flow (`request OTP` -> `verify OTP` -> receive API token)
+- Domain models for salons, services, providers, appointments, reviews, and favorites
+- Seeders for demo data so the mobile app can be tested quickly
+- Optional admin tooling dependencies (`Filament`, media library plugins)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Core API Areas
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+All main app endpoints are defined in `routes/api.php`.
 
-## Learning Laravel
+- `POST /api/auth/otp/request` - Request OTP for a phone number
+- `POST /api/auth/otp/verify` - Verify OTP and login/register user
+- `POST /api/auth/logout` - Logout current user (requires token)
+- `GET /api/home` - Home screen data
+- `GET /api/explore` - Explore/discovery feed
+- `GET /api/search` - Search salons/services
+- `GET /api/salons/{id}` - Salon detail page
+- `POST /api/appointments` - Create appointment booking
+- `GET /api/bookings` - List user bookings
+- `GET/POST/DELETE /api/favorites` - Manage favorite salons
+- `GET/PATCH /api/profile` - Read/update user profile
+- `GET /api/locations/*` - Place lookup and reverse lookup helpers
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+> Most app endpoints are protected with `auth:sanctum`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Project Structure (High Level)
 
-## Laravel Sponsors
+- `app/Http/Controllers/Api` - Mobile app API controllers
+- `app/Models` - Eloquent models (User, Salon, Appointment, etc.)
+- `database/migrations` - Database schema
+- `database/seeders` - Demo/test data seeders
+- `routes/api.php` - Public + authenticated API routes
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Requirements
 
-### Premium Partners
+- PHP `^8.2`
+- Composer
+- Database (MySQL/PostgreSQL/SQLite supported by Laravel)
+- Node.js + npm (only needed for frontend assets/dev scripts)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Local Setup
 
-## Contributing
+1. Clone the repository.
+2. Install dependencies:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   ```bash
+   composer install
+   ```
 
-## Code of Conduct
+3. Create environment file:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   ```bash
+   cp .env.example .env
+   ```
 
-## Security Vulnerabilities
+4. Generate app key:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   ```bash
+   php artisan key:generate
+   ```
+
+5. Configure database in `.env`.
+6. Run migrations and seed demo data:
+
+   ```bash
+   php artisan migrate --seed
+   ```
+
+7. Start the API server:
+
+   ```bash
+   php artisan serve
+   ```
+
+The API will be available at `http://127.0.0.1:8000`.
+
+## Useful Commands
+
+```bash
+# Run tests
+php artisan test
+
+# Format code (Laravel Pint)
+./vendor/bin/pint
+
+# Run app + queue + logs + vite together (project script)
+composer run dev
+```
+
+## Environment Notes
+
+- Set `GOOGLE_MAPS_API_KEY` in `.env` if location endpoints rely on Google Maps services.
+- Ensure Sanctum is configured correctly when testing from a mobile app or API client.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project uses the [MIT License](https://opensource.org/licenses/MIT).
